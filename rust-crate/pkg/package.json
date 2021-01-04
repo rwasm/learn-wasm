@@ -1,0 +1,15 @@
+{
+  "name": "rust-crate",
+  "collaborators": [
+    "lencx <cxin1314@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "rust_crate_bg.wasm",
+    "rust_crate.js",
+    "rust_crate.d.ts"
+  ],
+  "module": "rust_crate.js",
+  "types": "rust_crate.d.ts",
+  "sideEffects": false
+}
