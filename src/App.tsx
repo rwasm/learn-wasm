@@ -17,19 +17,19 @@ function App() {
         </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://github.com/lencx/create-xc-app"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          create-xc-app/template-wasm-react
         </a>
         <a
           className="App-link"
-          href="https://webassembly.org"
+          href="https://github.com/lencx/learn-wasm"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn WebAssembly
+          learn-wasm
         </a>
       </header>
     </div>
