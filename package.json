@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "wasm:copy": "node ./scripts/wasm-copy.js",
     "build": "tsc && vite build && npm run wasm:copy",
-    "deploy": "tsc && vite build --config ./vite.config.deploy.ts && npm run wasm:copy"
+    "deploy": "tsc && vite build --config vite.deploy.ts && npm run wasm:copy",
+    "wasm:copy": "node ./scripts/wasm-copy.js"
   },
   "dependencies": {
     "react": "^17.0.0",

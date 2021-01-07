@@ -5,7 +5,6 @@ import path from 'path';
 const config: UserConfig = {
   jsx: 'react',
   minify: 'esbuild',
-  // write: true,
   plugins: [
     reactPlugin,
   ],
