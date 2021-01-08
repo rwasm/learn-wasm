@@ -18,7 +18,8 @@
     "baseUrl": ".",
     "paths": {
       "/@/*": ["src/*"],
-      "/hooks/*": ["src/hooks/*"]
+      "/hooks/*": ["src/hooks/*"],
+      "/router/*": ["src/router/*"],
     }
   },
   "include": ["src"]

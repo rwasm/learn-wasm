@@ -13,6 +13,7 @@ const config: UserConfig = {
   alias: {
     '/@/': path.resolve(__dirname, 'src'),
     '/hooks/': path.resolve(__dirname, 'src/hooks'),
+    '/router/': path.resolve(__dirname, 'src/router'),
     'rust_crate': path.resolve(__dirname, 'rust-crate/pkg/rust_crate.js'),
   },
 };
