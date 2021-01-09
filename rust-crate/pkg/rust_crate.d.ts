@@ -4,16 +4,16 @@
 */
 export function run(): void;
 /**
-* @param {string} name
 */
-export function greet(name: string): void;
+export function chasmStart(): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly run: () => void;
-  readonly greet: (a: number, b: number) => void;
+  readonly chasmStart: () => void;
+  readonly __wbindgen_exn_store: (a: number) => void;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_start: () => void;
