@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": [],
-    "allowJs": true,
+    "types": ["vite/client"],
+    "allowJs": false,
     "skipLibCheck": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -15,12 +15,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "baseUrl": ".",
-    "paths": {
-      "/@/*": ["src/*"],
-      "/hooks/*": ["src/hooks/*"],
-      "/router/*": ["src/router/*"],
-    }
   },
-  "include": ["src"]
+  "include": ["./src"]
 }

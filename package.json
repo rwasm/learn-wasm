@@ -3,23 +3,20 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run wasm:copy",
-    "deploy": "tsc && vite build --config vite.deploy.ts && npm run wasm:copy",
-    "wasm:copy": "node ./scripts/wasm-copy.js"
+    "build": "tsc && vite build"
   },
   "dependencies": {
     "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-router-dom": "^5.2.0"
+    "react-dom": "^17.0.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@types/react-router-dom": "^5.1.7",
-    "sass": "^1.32.2",
+    "@vitejs/plugin-react-refresh": "^1.1.0",
+    "path": "^0.12.7",
     "typescript": "^4.1.2",
-    "vite": "^1.0.0-rc.13",
+    "vite": "^2.0.0-beta.30",
     "vite-plugin-react": "^4.0.0",
-    "vite-plugin-rust": "^1.0.1"
+    "vite-plugin-rsw": "^1.0.0"
   }
 }

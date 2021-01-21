@@ -1,18 +1,14 @@
-import { useEffect, useState } from 'react'
-import init from 'rust_crate'
+import { useState, useEffect } from 'react';
+import chasmInit from '@rsw/chasm';
 
 export default function useWasm() {
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true)
-    init().then((m: any) => {
-      setLoading(!m)
-      if (!m) {
-        console.error('WebAssembly instance loading error');
-      }
-    })
+    chasmInit()
+      .then(i => !i)
+      .then(i => setLoading(i))
   }, [])
 
-  return [loading]
+  return [loading];
 }

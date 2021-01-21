@@ -1,33 +1,23 @@
-/**
- * @author: lencx
- * @create_at: Jan 05, 2021
- */
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
-
-import useWasm from '/hooks/useWasm';
-import Router from '/router/Router';
-import routes from './routes';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import useWasm from './hooks/useWasm';
 import './index.css';
+import App from './App';
 
-const WasmApp = () => {
+const Container = () => {
   const [loading] = useWasm();
 
-  return !loading
-    ? (
-      <React.StrictMode>
-        <BrowserRouter>
-          <Router routes={routes} />
-        </BrowserRouter>
-      </React.StrictMode>
-    ) : (
-      <div className="wasm_loading">loading...</div>
-    );
-}
+  console.log('«10» /learn-wasm/src/main.tsx ~> ', loading);
+
+
+  return (
+    <React.StrictMode>
+      {loading ? <div>loading...</div> : <App />}
+    </React.StrictMode>
+  )
+};
 
 ReactDOM.render(
-  <WasmApp />,
+  <Container />,
   document.getElementById('root')
 )

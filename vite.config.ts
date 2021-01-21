@@ -1,32 +1,15 @@
-import * as reactPlugin from 'vite-plugin-react';
-import type { UserConfig } from 'vite';
-const rustPlugin = require('vite-plugin-rust');
-import path from 'path';
+import reactRefresh from '@vitejs/plugin-react-refresh';
+import { defineConfig } from 'vite';
+import ViteRsw from 'vite-plugin-rsw';
 
-const RUST_CRATE = {
-  rust_crate: './rust-crate',
-};
-
-const config: UserConfig = {
-  jsx: 'react',
-  minify: 'esbuild',
-  // write: true,
+export default defineConfig({
   plugins: [
-    reactPlugin,
-    // https://github.com/gliheng/vite-plugin-rust
-    // TODO: `vite build` - *.wasm files loss
-    // Temporary solutions: scripts/wasm-copy.js
-    rustPlugin({
-      crates: RUST_CRATE,
+    reactRefresh(),
+    ViteRsw({
+      mode: 'release',
+      crates: [
+        "@rsw/chasm"
+      ]
     }),
   ],
-  // see: https://github.com/vitejs/vite/blob/master/src/node/config.ts
-  // the key must start and end with a slash
-  alias: {
-    '/@/': path.resolve(__dirname, 'src'),
-    '/hooks/': path.resolve(__dirname, 'src/hooks'),
-    '/router/': path.resolve(__dirname, 'src/router'),
-  },
-};
-
-export default config;
+})
