@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import { chasm } from '@rsw/chasm';
+import { chasm } from '../@rsw/chasm/pkg/rsw__chasm';
 
 function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
