@@ -7,12 +7,6 @@ fn window() -> web_sys::Window {
     web_sys::window().expect("no global `window` exists")
 }
 
-// fn request_animation_frame(f: &Closure<dyn FnMut()>) {
-//     window()
-//         .request_animation_frame(f.as_ref().unchecked_ref())
-//         .expect("should register `requestAnimationFrame` OK");
-// }
-
 fn document() -> web_sys::Document {
     window()
         .document()
@@ -76,12 +70,6 @@ pub fn chasm() -> Result<(), JsValue> {
     // https://github.com/rustwasm/wasm-bindgen/issues/2231
     let win_width = window.inner_width()?.as_f64().ok_or(JsValue::NULL)?;
     let win_height = window.inner_height()?.as_f64().ok_or(JsValue::NULL)?;
-
-    // get canvas width & height
-    // let canvas_width: JsValue = canvas.width().into();
-    // let canvas_height: JsValue = canvas.height().into();
-    // console::log_2(&"canvas_width => ".into(), &canvas_width);
-    // console::log_2(&"canvas_height => ".into(), &canvas_height);
 
     // fit the canvas to the viewport
     canvas.set_width(win_width as u32);
@@ -168,12 +156,9 @@ pub fn chasm() -> Result<(), JsValue> {
                 gl.uniform2f(Some(val), x, y);
             }
 
-            // tell webgl where to look for vertex data inside the vertex buffer
             gl.vertex_attrib_pointer_with_i32(vertex_position_location, 2, GL::FLOAT, false, 0, 0);
-            // draw two triangle strips (will form a rectangle)
             gl.draw_arrays(GL::TRIANGLE_STRIP, 0, 4);
         }) as Box<dyn FnMut(_)>);
-        // request_animation_frame(mousemove_cb);
         canvas.add_event_listener_with_callback("mousemove", mousemove_cb.as_ref().unchecked_ref())?;
         mousemove_cb.forget();
     }
