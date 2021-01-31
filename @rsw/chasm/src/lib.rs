@@ -1,63 +1,8 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::{WebGlRenderingContext as GL};
-
-fn window() -> web_sys::Window {
-    web_sys::window().expect("no global `window` exists")
-}
-
-fn document() -> web_sys::Document {
-    window()
-        .document()
-        .expect("should have a document on window")
-}
-
-fn shader_code() -> (&'static str, &'static str) {
-    let vert_code = r#"
-// vertex position attribure
-attribute vec2 a_Position;
-// set vertex position
-void main() {
-  gl_Position = vec4(a_Position, 0, 1);
-}
-"#;
-    let frag_code = r#"
-// choose flot precision
-precision mediump float;
-// uniform values
-uniform vec2 u_viewport;
-uniform vec2 u_juliaComplex;
-// function to map from a range to another (I know there's an extra pair of parenthesis but it makes the operation easier to understand)
-float map (float v, float inMin, float inMax, float outMin, float outMax) {
-    return ((v - inMin) * ((outMax - outMin) / (inMax - inMin))) + outMin;
-}
-// set the opacity of every pixel by checking if any of its position's components, mapped to the complex plane, tend to infinity or not after applying recursively to them the function f(z) = z^2 + c (c being the mouse's position's x and y coordinates, relative to the viewport, mapped to -1.4 -> 1.4 range and -2 -> 2 respectively; this additional mapping is not necessary but I simply used it for aesthetic purposes)
-void main() {
-    // check if any of the components of the current complex number tend to infinity (and if so after how many iterations)
-    float real = map(gl_FragCoord.x, 0.0, u_viewport.x, -2.0, 2.0);
-    float imaginary = map(gl_FragCoord.y, 0.0, u_viewport.y, 1.4, -1.4);
-    float realSquared = real * real;
-    float imaginarySquared = imaginary * imaginary;
-    int iterationCount;
-    for(int i = 0; i < 255; i++){
-        imaginary = 2.0 * real * imaginary + map(u_juliaComplex.y, 0.0, u_viewport.y, .8, -.8);
-        real = realSquared - imaginarySquared + map(u_juliaComplex.x, 0.0, u_viewport.x, -.9, .4);
-        realSquared = real * real;
-        imaginarySquared = imaginary * imaginary;
-        iterationCount = i;
-        if( abs((imaginarySquared) / (imaginary + real)) > 10.0 ){ break; }
-    }
-    // set pixels color
-    if (iterationCount == 254){
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-    } else {
-        gl_FragColor = vec4(0.0, 0.0, 0.0, map(float(iterationCount), 0.0, 253.0, 0.0, 1.0) + .75);
-    }
-}
-"#;
-    (vert_code, frag_code)
-}
+use web_sys::WebGlRenderingContext as GL;
 
 #[wasm_bindgen]
 pub fn chasm() -> Result<(), JsValue> {
@@ -117,51 +62,120 @@ pub fn chasm() -> Result<(), JsValue> {
 
     gl.buffer_data_with_array_buffer_view(GL::ARRAY_BUFFER, &vert_array, GL::STATIC_DRAW);
 
-    let original_mouse_point = (
-        (canvas.width() / 2) as f32,
-        (canvas.height() / 2) as f32,
-    );
-
-    let lerping_factor = 0.07;
-
     if let Some(val) = &viewport_uniform_location {
         gl.uniform2f(Some(val), win_width as f32, win_height as f32);
     }
 
+    let original_mouse_point_x = Rc::new(RefCell::new((canvas.width() / 2) as f32));
+    let original_mouse_point_y = Rc::new(RefCell::new((canvas.height() / 2) as f32));
+
+    let lerping_factor = 1.0;
+
     {
-        // init canvas
-        if let Some(val) = &julia_complex_uniform_location {
-            gl.uniform2f(Some(val), original_mouse_point.0, original_mouse_point.1);
-        }
-        // tell webgl where to look for vertex data inside the vertex buffer
-        gl.vertex_attrib_pointer_with_i32(vertex_position_location, 2, GL::FLOAT, false, 0, 0);
-        // draw two triangle strips (will form a rectangle)
-        gl.draw_arrays(GL::TRIANGLE_STRIP, 0, 4);
+        // request_animation_frame
+        let p1_x = original_mouse_point_x.clone();
+        let p1_y = original_mouse_point_y.clone();
+
+        let f = Rc::new(RefCell::new(None));
+        let g = f.clone();
+        *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
+            if let Some(val) = &julia_complex_uniform_location {
+                gl.uniform2f(
+                    Some(val),
+                    *p1_x.borrow() * lerping_factor,
+                    *p1_y.borrow() * lerping_factor,
+                );
+            }
+
+            // tell webgl where to look for vertex data inside the vertex buffer
+            gl.vertex_attrib_pointer_with_i32(vertex_position_location, 2, GL::FLOAT, false, 0, 0);
+            // draw two triangle strips (will form a rectangle)
+            gl.draw_arrays(GL::TRIANGLE_STRIP, 0, 4);
+
+            // Schedule ourself for another requestAnimationFrame callback.
+            request_animation_frame(f.borrow().as_ref().unwrap());
+        }) as Box<dyn FnMut()>));
+
+        request_animation_frame(g.borrow().as_ref().unwrap());
     }
 
     {
-        // TODO: request_animation_frame
         // mousemove
-        let mut u_x: f32 = original_mouse_point.0;
-        let mut u_y: f32 = original_mouse_point.1;
+        let p1_x = original_mouse_point_x.clone();
+        let p1_y = original_mouse_point_y.clone();
+
         let mousemove_cb = Closure::wrap(Box::new(move |event: web_sys::MouseEvent| {
-            // TODO: set mouse_point
-            let x = event.client_x() as f32;
-            let y = event.client_y() as f32;
-
-            u_x += (x - u_x) * lerping_factor;
-            u_y += (y - u_y) * lerping_factor;
-
-            if let Some(val) = &julia_complex_uniform_location {
-                gl.uniform2f(Some(val), x, y);
-            }
-
-            gl.vertex_attrib_pointer_with_i32(vertex_position_location, 2, GL::FLOAT, false, 0, 0);
-            gl.draw_arrays(GL::TRIANGLE_STRIP, 0, 4);
+            *p1_x.borrow_mut() = event.client_x() as f32;
+            *p1_y.borrow_mut() = event.client_y() as f32;
         }) as Box<dyn FnMut(_)>);
-        canvas.add_event_listener_with_callback("mousemove", mousemove_cb.as_ref().unchecked_ref())?;
+
+        canvas
+            .add_event_listener_with_callback("mousemove", mousemove_cb.as_ref().unchecked_ref())?;
+
         mousemove_cb.forget();
     }
 
     Ok(())
+}
+
+fn window() -> web_sys::Window {
+    web_sys::window().expect("no global `window` exists")
+}
+
+fn document() -> web_sys::Document {
+    window()
+        .document()
+        .expect("should have a document on window")
+}
+
+fn request_animation_frame(f: &Closure<dyn FnMut()>) {
+    window()
+        .request_animation_frame(f.as_ref().unchecked_ref())
+        .expect("should register `requestAnimationFrame` OK");
+}
+
+fn shader_code() -> (&'static str, &'static str) {
+    let vert_code = r#"
+// vertex position attribure
+attribute vec2 a_Position;
+// set vertex position
+void main() {
+  gl_Position = vec4(a_Position, 0, 1);
+}
+"#;
+    let frag_code = r#"
+// choose flot precision
+precision mediump float;
+// uniform values
+uniform vec2 u_viewport;
+uniform vec2 u_juliaComplex;
+// function to map from a range to another (I know there's an extra pair of parenthesis but it makes the operation easier to understand)
+float map (float v, float inMin, float inMax, float outMin, float outMax) {
+    return ((v - inMin) * ((outMax - outMin) / (inMax - inMin))) + outMin;
+}
+// set the opacity of every pixel by checking if any of its position's components, mapped to the complex plane, tend to infinity or not after applying recursively to them the function f(z) = z^2 + c (c being the mouse's position's x and y coordinates, relative to the viewport, mapped to -1.4 -> 1.4 range and -2 -> 2 respectively; this additional mapping is not necessary but I simply used it for aesthetic purposes)
+void main() {
+    // check if any of the components of the current complex number tend to infinity (and if so after how many iterations)
+    float real = map(gl_FragCoord.x, 0.0, u_viewport.x, -2.0, 2.0);
+    float imaginary = map(gl_FragCoord.y, 0.0, u_viewport.y, 1.4, -1.4);
+    float realSquared = real * real;
+    float imaginarySquared = imaginary * imaginary;
+    int iterationCount;
+    for(int i = 0; i < 255; i++){
+        imaginary = 2.0 * real * imaginary + map(u_juliaComplex.y, 0.0, u_viewport.y, .8, -.8);
+        real = realSquared - imaginarySquared + map(u_juliaComplex.x, 0.0, u_viewport.x, -.9, .4);
+        realSquared = real * real;
+        imaginarySquared = imaginary * imaginary;
+        iterationCount = i;
+        if( abs((imaginarySquared) / (imaginary + real)) > 10.0 ){ break; }
+    }
+    // set pixels color
+    if (iterationCount == 254){
+        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+    } else {
+        gl_FragColor = vec4(0.0, 0.0, 0.0, map(float(iterationCount), 0.0, 253.0, 0.0, 1.0) + .75);
+    }
+}
+"#;
+    (vert_code, frag_code)
 }
