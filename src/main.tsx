@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import useWasm from './hooks/useWasm';
-import './index.css';
 import App from './App';
+import './index.css';
 
 const Container = () => {
   const [loading] = useWasm();

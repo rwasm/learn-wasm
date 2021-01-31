@@ -5,10 +5,10 @@ use wasm_bindgen::JsCast;
 use web_sys::WebGlRenderingContext as GL;
 
 #[wasm_bindgen]
-pub fn chasm() -> Result<(), JsValue> {
-    let window = window();
+pub fn chasm(canvas_id: &str) -> Result<(), JsValue> {
+    let window = Rc::new(window());
     let document = document();
-    let chasm = document.get_element_by_id("chasm").unwrap();
+    let chasm = document.get_element_by_id(canvas_id).unwrap();
     let canvas: web_sys::HtmlCanvasElement = chasm.dyn_into::<web_sys::HtmlCanvasElement>()?;
 
     // get window width & height
@@ -62,9 +62,11 @@ pub fn chasm() -> Result<(), JsValue> {
 
     gl.buffer_data_with_array_buffer_view(GL::ARRAY_BUFFER, &vert_array, GL::STATIC_DRAW);
 
-    if let Some(val) = &viewport_uniform_location {
-        gl.uniform2f(Some(val), win_width as f32, win_height as f32);
-    }
+    gl.uniform2f(
+        Some(viewport_uniform_location.as_ref().unwrap()),
+        win_width as f32,
+        win_height as f32
+    );
 
     let original_mouse_point_x = Rc::new(RefCell::new((canvas.width() / 2) as f32));
     let original_mouse_point_y = Rc::new(RefCell::new((canvas.height() / 2) as f32));
@@ -79,13 +81,11 @@ pub fn chasm() -> Result<(), JsValue> {
         let f = Rc::new(RefCell::new(None));
         let g = f.clone();
         *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
-            if let Some(val) = &julia_complex_uniform_location {
-                gl.uniform2f(
-                    Some(val),
-                    *p1_x.borrow() * lerping_factor,
-                    *p1_y.borrow() * lerping_factor,
-                );
-            }
+            gl.uniform2f(
+                Some(julia_complex_uniform_location.as_ref().unwrap()),
+                *p1_x.borrow() * lerping_factor,
+                *p1_y.borrow() * lerping_factor,
+            );
 
             // tell webgl where to look for vertex data inside the vertex buffer
             gl.vertex_attrib_pointer_with_i32(vertex_position_location, 2, GL::FLOAT, false, 0, 0);

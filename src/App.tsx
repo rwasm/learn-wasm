@@ -1,18 +1,13 @@
-import React, { useRef, useEffect } from 'react';
-import { chasm } from '@rsw/chasm';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import Router from './router/Router';
 
-function App() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+import routes from './routes';
 
-  useEffect(() => {
-    chasm();
-  }, [])
-
+export default function App() {
   return (
-    <div className="App">
-      <canvas ref={canvasRef} id="chasm" />
-    </div>
+    <BrowserRouter>
+      <Router routes={routes} />
+    </BrowserRouter>
   )
 }
-
-export default App;
