@@ -4,6 +4,7 @@ node_modules
 # dist
 *.local
 *.lock
+package-lock.json
 
 # rust
 target/

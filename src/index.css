@@ -14,7 +14,7 @@ code {
 }
 
 .home {
-  position: relative;
+  padding: 20px;
   min-height: 100vh;
   background-color: #2a2a2a;
   text-align: center;
@@ -27,26 +27,33 @@ code {
 }
 
 .home nav li {
-  padding: 20px;
   font-weight: bold;
   font-size: 20px;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto 5px;
+  border: dashed 1px #999;
+  border-radius: 5px;
 }
 
-.home a {
+.home nav a {
+  padding: 16px 0;
   color: #fff;
+  display: block;
+  width: 100%;
+  text-decoration: none;
 }
 
 .home footer {
-  position: absolute;
-  bottom: 10px;
   width: 100%;
   font-size: 14px;
+  margin-top: 20px;
 }
 .home footer a {
   font-size: 14px;
-  background-color: #fff;
+  background-color: #4a4a4a;
   padding: 0 5px;
-  color: #2a2a2a;
+  color: #f3f3f3;
   border-radius: 4px;
   text-decoration: none;
   box-shadow: 0 0 0 1px #000;

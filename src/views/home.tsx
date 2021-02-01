@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <div className="home">
       <nav>
-        {routes.map((i) => (
+        {routes.map((i) => i.path !== '/' && (
           <li key={i.path}>
             <Link to={i.path}>
               {i.title}
