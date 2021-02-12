@@ -8,6 +8,8 @@ npm init xc-app learn-wasm -t wasm-react
 
 ## [Awesome Lists](./awesome-lists.md)
 
+* [WebAssembly入门](https://mtc.nofwl.com/tech/post/wasm-start.html)
+
 ## Examples
 
 ### @rsw/chasm
