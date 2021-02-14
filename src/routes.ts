@@ -9,6 +9,12 @@ const routes: RouteOption[] = [
     exact: true,
   },
   {
+    title: 'ffmpeg',
+    path: '/ffmpeg',
+    component: lazy(() => import('./views/ffmpeg')),
+    exact: true,
+  },
+  {
     path: '/',
     component: lazy(() => import('./views/home')),
   },

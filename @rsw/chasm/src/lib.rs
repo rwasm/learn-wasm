@@ -6,7 +6,7 @@ use web_sys::WebGlRenderingContext as GL;
 
 #[wasm_bindgen]
 pub fn chasm(canvas_id: &str) -> Result<(), JsValue> {
-    let window = Rc::new(window());
+    let window = window();
     let document = document();
     let chasm = document.get_element_by_id(canvas_id).unwrap();
     let canvas: web_sys::HtmlCanvasElement = chasm.dyn_into::<web_sys::HtmlCanvasElement>()?;
@@ -21,7 +21,6 @@ pub fn chasm(canvas_id: &str) -> Result<(), JsValue> {
     canvas.set_height(win_height as u32);
 
     let gl = canvas.get_context("webgl")?.unwrap().dyn_into::<GL>()?;
-    let gl = Rc::new(gl);
 
     gl.viewport(0, 0, canvas.width() as i32, canvas.height() as i32);
 
