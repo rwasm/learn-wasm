@@ -4,7 +4,8 @@ import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 const ffmpeg = createFFmpeg({ log: true });
 
 export default function FfmpegPage() {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState<boolean>(false);
+  const [convertStatus, setConvertStatus] = useState<boolean>(false);
   const [file, setFile] = useState<File | null>(null);
   const [gif, setGif] = useState<string | null>(null);
 
@@ -21,8 +22,12 @@ export default function FfmpegPage() {
     // write the file to memory
     ffmpeg.FS('writeFile', name, await fetchFile(file));
 
+    setConvertStatus(true);
+
     // run the FFMpeg command
     await ffmpeg.run('-i', name, 'test.gif');
+
+    setConvertStatus(false);
 
     // read the result
     const data = ffmpeg.FS('readFile', 'test.gif');
@@ -46,6 +51,7 @@ export default function FfmpegPage() {
       <br />
       {file && <button onClick={convertToGif}>convert to gif</button>}
       <br />
+      {convertStatus && <div>{file?.name} being converted</div>}
       {gif && <img width={500} src={gif} />}
     </div>
   ) : <div>loading...</div>;
