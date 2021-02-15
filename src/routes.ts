@@ -7,12 +7,14 @@ const routes: RouteOption[] = [
     path: '/rsw/chasm',
     component: lazy(() => import('./views/chasm')),
     exact: true,
+    env: ['dev', 'build'],
   },
   {
     title: 'ffmpeg',
     path: '/ffmpeg',
     component: lazy(() => import('./views/ffmpeg')),
     exact: true,
+    env: ['dev'],
   },
   {
     path: '/',

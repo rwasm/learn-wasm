@@ -44,6 +44,46 @@ code {
   text-decoration: none;
 }
 
+.home .title {
+  margin-right: 10px;
+}
+
+.home .env-item {
+  font-weight: normal;
+  font-size: 12px;
+  padding: 0 5px;
+  margin: 0 2px;
+  background: rgb(38, 165, 70);
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.tip {
+  text-align: left;
+  display: inline-block;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.tip .item {
+  margin: 2px 0;
+  text-align: center;
+  margin-right: 5px;
+  background-color: #000;
+  padding-right: 4px;
+  color: #999;
+  border-radius: 4px;
+}
+
+.tip .item span {
+  background-color: rgb(38, 165, 70);
+  padding: 0 4px;
+  margin-right: 4px;
+  color: #fff;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
 .home footer {
   width: 100%;
   font-size: 14px;

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
-const ffmpeg = createFFmpeg({ log: true });
+const ffmpeg = createFFmpeg({
+  // corePath: 'https://unpkg.com/@ffmpeg/ffmpeg@0.9.5/dist/ffmpeg.min.js',
+  log: true,
+});
 
 export default function FfmpegPage() {
   const [ready, setReady] = useState<boolean>(false);

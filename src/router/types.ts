@@ -1,5 +1,7 @@
 import { ComponentType, LazyExoticComponent, ReactNode } from 'react';
 
+type envStatus = 'dev' | 'build';
+
 export interface RouteOption {
   title?: string,
   // basic prop
@@ -16,4 +18,5 @@ export interface RouteOption {
   redirect?: string;
   // if router is private, this is going to be true
   private?: boolean;
+  env?: envStatus[];
 }
