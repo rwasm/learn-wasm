@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
-const ffmpeg = createFFmpeg({
-  // corePath: 'https://unpkg.com/@ffmpeg/ffmpeg@0.9.6/dist/ffmpeg.min.js',
-  log: true,
-});
+const ffmpeg = createFFmpeg({ log: true });
 
 export default function FfmpegPage() {
   const [ready, setReady] = useState<boolean>(false);
@@ -21,15 +18,15 @@ export default function FfmpegPage() {
 
   const convertToGif = async () => {
     if (!file) return;
-    setMessage('Start transcoding');
     const name = file?.name;
     // write the file to memory
+    setMessage('Start transcoding');
     ffmpeg.FS('writeFile', name, await fetchFile(file));
 
     // run the FFMpeg command
     await ffmpeg.run('-i', name, 'test.gif');
-
     setMessage('Complete transcoding');
+
     // read the result
     const data = ffmpeg.FS('readFile', 'test.gif');
 

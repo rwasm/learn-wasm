@@ -6,8 +6,7 @@ export default function useWasm() {
 
   useEffect(() => {
     chasmInit()
-      .then(i => !i)
-      .then(i => setLoading(i))
+      .then(i => setLoading(!i))
   }, [])
 
   return [loading];
