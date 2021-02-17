@@ -34,6 +34,7 @@ code {
   margin: 0 auto 5px;
   border: dashed 1px #999;
   border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .home nav a {
