@@ -17,3 +17,5 @@ export default defineConfig({
     }),
   ],
 })
+
+// '-s', 'node_modules'
