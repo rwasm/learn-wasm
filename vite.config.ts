@@ -13,6 +13,7 @@ export default defineConfig({
       mode: 'release',
       crates: [
         '@rsw/chasm',
+        '@rsw/game-of-life',
       ]
     }),
   ],
