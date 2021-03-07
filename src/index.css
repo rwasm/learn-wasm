@@ -99,3 +99,17 @@ code {
   text-decoration: none;
   box-shadow: 0 0 0 1px #000;
 }
+
+/* game-of-life-page */
+.game-of-life-page {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+pre#game-of-life {
+  line-height: 8px;
+  margin: 0;
+  padding: 0;
+}

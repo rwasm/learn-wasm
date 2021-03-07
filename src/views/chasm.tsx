@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
-import { chasm } from '@rsw/chasm';
+import init, { chasm } from '@rsw/chasm';
 
 export default function ChasmPage() {
   useEffect(() => {
-    chasm('chasm');
+    (async () => {
+      await init();
+      chasm('chasm');
+    })()
   }, [])
 
   return <canvas id="chasm" />;

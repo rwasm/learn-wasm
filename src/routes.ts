@@ -10,6 +10,13 @@ const routes: RouteOption[] = [
     env: ['dev', 'build'],
   },
   {
+    title: 'game of life',
+    path: '/rsw/game-of-life',
+    component: lazy(() => import('./views/game_of_life')),
+    exact: true,
+    env: ['dev', 'build'],
+  },
+  {
     title: 'ffmpeg',
     path: '/ffmpeg',
     component: lazy(() => import('./views/ffmpeg')),
