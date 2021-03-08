@@ -107,6 +107,21 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  flex-direction: column;
+}
+.game-of-life-page .op {
+  margin-top: 10px;
+}
+.game-of-life-page .op button {
+  width: 40px;
+  height: 30px;
+  background: #eee;
+  box-shadow: none;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  margin: 0 5px;
 }
 pre#game-of-life {
   line-height: 8px;

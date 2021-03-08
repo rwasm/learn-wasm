@@ -4,21 +4,13 @@ extern crate js_sys;
 use wasm_bindgen::prelude::*;
 use fixedbitset::FixedBitSet;
 
-// 定义细胞Cell
-#[wasm_bindgen]
-#[repr(u8)] // 将每个细胞表示为单个字节
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Cell { // 细胞
-    // Dead为0，Alive为1，方便计算一个细胞的存活邻居
-    Alive = 1, // 存活: ◼
-    Dead = 0, // 死亡: ◻
-}
-
 // 定义宇宙Universe
 #[wasm_bindgen]
 pub struct Universe {
     width: u32, // 宇宙宽度
     height: u32, // 宇宙高度
+    // 存活 - ◼：1
+    // 死亡 - ◻：0
     cells: FixedBitSet, // 宇宙内的细胞集合
 }
 
@@ -85,8 +77,8 @@ impl Universe {
 
     // 初始化存活及死亡细胞
     pub fn new() -> Universe {
-        let width = 64;
-        let height = 64;
+        let width = 120;
+        let height = 80;
 
         let size = (width * height) as usize;
         let mut cells = FixedBitSet::with_capacity(size);
@@ -116,28 +108,11 @@ impl Universe {
         self.cells.as_slice().as_ptr()
     }
 
-    // // 文本渲染
-    // pub fn render(&self) -> String {
-    //     self.to_string()
-    // }
-
+    // 细胞突变: 存活 ⇋ 死亡
+    pub fn toggle_cell(&mut self, row: u32, column: u32) {
+        let idx = self.get_index(row, column);
+        let mut next = self.cells.clone();
+        next.toggle(idx);
+        self.cells = next;
+    }
 }
-
-// 宇宙的状态被表示为细胞的向量
-// 为了使人可读，让我们实现一个基本的文本渲染器
-// 并为每个细胞打印“Unicode”字符
-// 存活打印“◼”，死亡打印“◻”
-// impl fmt::Display for Universe {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         for line in self.cells.as_slice().chunks(self.width as usize) {
-//             for &cell in line {
-//                 let symbol = if cell == Cell::Dead { '◻' } else { '◼' };
-//                 write!(f, "{}", symbol)?;
-//             }
-
-//             write!(f, "\n")?;
-//         }
-
-//         Ok(())
-//     }
-// }

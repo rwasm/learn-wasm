@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import init, { Universe } from '@rsw/game-of-life';
 
 const CELL_SIZE = 7; // px
@@ -6,46 +6,21 @@ const GRID_COLOR = '#D2D2D2';
 const DEAD_COLOR = '#FFFFFF';
 const ALIVE_COLOR = '#000000';
 
-export default function ChasmPage() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
+export default function GameOfLifePage() {
   useEffect(() => {
-    (async () => {
-      const wasmInit = await init();
-
-      // 构造宇宙，并且获取其宽度和高度
-      const universe = Universe.new();
-      const width = universe.width();
-      const height = universe.height();
-
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        canvas.width = (CELL_SIZE + 1) * width + 1;
-        canvas.height = (CELL_SIZE + 1) * height + 1;
-
-        const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-        // 渲染游戏
-        const renderLoop = () => {
-          universe.tick();
-          // 画网格
-          drawGrid({ ctx, width, height });
-          // 画所有细胞
-          drawCells({
-            universe, ctx, width, height,
-            memory: wasmInit.memory, // WebAssembly memory
-          });
-          requestAnimationFrame(renderLoop);
-        }
-
-        renderLoop();
-      }
-    })()
+    initGame(
+      'game-of-life-canvas',
+      'play-pause-btn',
+    );
   }, [])
 
   return (
     <div className="game-of-life-page">
-      <canvas ref={canvasRef} id="game-of-life-canvas" />
+      <canvas id="game-of-life-canvas" />
+      <div className="op">
+        <button id="play-pause-btn" title="play-pause">▶</button>
+        {/* <button id="clear-btn" title="clear">🔄</button> */}
+      </div>
     </div>
   );
 }
@@ -127,4 +102,91 @@ function drawCells({ universe, ctx, memory, width, height }: drawCellsArgs) {
   }
 
   ctx.stroke();
+}
+
+async function initGame(canvasId: string, btnId: string) {
+  const canvas = document.getElementById(canvasId) as HTMLCanvasElement;
+  const playPauseBtn = document.getElementById(btnId) as HTMLButtonElement;
+  // const clearBtn = document.getElementById(clearId) as HTMLButtonElement;
+  let animationId: number | null = null;
+
+  const wasmInit = await init();
+
+  // 构造宇宙，并且获取其宽度和高度
+  const universe = Universe.new();
+  const width = universe.width();
+  const height = universe.height();
+
+  canvas.width = (CELL_SIZE + 1) * width + 1;
+  canvas.height = (CELL_SIZE + 1) * height + 1;
+
+  const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+  // 初始化网格
+  drawGrid({ ctx, width, height });
+
+  // 初始化细胞
+  drawCells({
+    universe, ctx, width, height,
+    memory: wasmInit.memory, // WebAssembly memory
+  });
+
+  // 细胞迭代
+  const renderLoop = () => {
+    universe.tick();
+    // 更新细胞
+    drawCells({
+      universe, ctx, width, height,
+      memory: wasmInit.memory, // WebAssembly memory
+    });
+    animationId = requestAnimationFrame(renderLoop);
+  }
+
+  const isPaused = () => {
+    return animationId === null;
+  };
+
+  const play = () => {
+    playPauseBtn.textContent = '⏸';
+    renderLoop();
+  };
+
+  const pause = () => {
+    playPauseBtn.textContent = '▶';
+    cancelAnimationFrame(animationId as number);
+    animationId = null;
+  };
+
+  playPauseBtn.addEventListener('click', () => {
+    if (isPaused()) {
+      play();
+    } else {
+      pause();
+    }
+  });
+
+  // TODO:
+  // clearBtn.addEventListener('click', () => {
+  //   universe.clear_cell();
+  // });
+
+  canvas.addEventListener('click', (event) => {
+    const boundingRect = canvas.getBoundingClientRect();
+
+    const scaleX = canvas.width / boundingRect.width;
+    const scaleY = canvas.height / boundingRect.height;
+
+    const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
+    const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+
+    const row = Math.min(Math.floor(canvasTop / (CELL_SIZE + 1)), height - 1);
+    const col = Math.min(Math.floor(canvasLeft / (CELL_SIZE + 1)), width - 1);
+
+    universe.toggle_cell(row, col);
+
+    drawCells({
+      universe, ctx, width, height,
+      memory: wasmInit.memory, // WebAssembly memory
+    });
+  })
 }
