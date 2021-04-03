@@ -21,7 +21,7 @@ const routes: RouteOption[] = [
     path: '/ffmpeg',
     component: lazy(() => import('./views/ffmpeg')),
     exact: true,
-    env: ['dev'],
+    env: ['dev', 'build'],
   },
   {
     path: '/',

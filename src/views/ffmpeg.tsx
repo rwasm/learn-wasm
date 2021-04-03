@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
 const ffmpeg = createFFmpeg({ log: true });
@@ -8,11 +8,15 @@ export default function FfmpegPage() {
   const [message, setMessage] = useState<string>('Click Start to transcode');
   const [file, setFile] = useState<File | null>(null);
   const [gif, setGif] = useState<string | null>(null);
+  const [ratio, setRatio] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       await ffmpeg.load();
       setReady(true);
+      ffmpeg.setProgress((params) => {
+        setRatio(+(params.ratio * 100).toFixed(2));
+      })
     })();
   }, [])
 
@@ -25,7 +29,7 @@ export default function FfmpegPage() {
 
     // run the FFMpeg command
     await ffmpeg.run('-i', name, 'test.gif');
-    setMessage('Complete transcoding');
+    setMessage('End transcoding');
 
     // read the result
     const data = ffmpeg.FS('readFile', 'test.gif');
@@ -37,21 +41,28 @@ export default function FfmpegPage() {
 
   return ready ? (
     <div>
-      {file && (
-        <video
-          controls
-          width={400}
-          src={URL.createObjectURL(file)}
-        />
-      )}
+      <Video file={file} />
       <br />
       <input type="file" onChange={(e: any) => setFile(e.target.files?.[0])} />
       <br />
       {file && <button onClick={convertToGif}>convert to gif</button>}
       <br />
       {message}
+      {ratio !== 0 && ratio !== 100 && (
+        <div>{ratio}%</div>
+      )}
       <br />
       {gif && <img width={500} src={gif} />}
     </div>
   ) : <div>loading...</div>;
 }
+
+const Video = React.memo(({ file }: { file: File | null }) => {
+  return file && (
+    <video
+      controls
+      width={400}
+      src={URL.createObjectURL(file)}
+    />
+  )
+})
