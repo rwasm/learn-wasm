@@ -22,4 +22,10 @@ npm init xc-app learn-wasm -t wasm-react
 
 <img src="./assets/game-of-life/1.png" width="200" /> <img src="./assets/game-of-life/2.png" width="200" />
 
+### @rsw/excel-read
+
+整理: lencx\
+作者: 郭宇 <guoyumail@qq.com>\
+源码地址: [guoyucode/excel_read](https://gitee.com/guoyucode/excel_read)
+
 ### ffmpeg

@@ -24,6 +24,13 @@ const routes: RouteOption[] = [
     env: ['dev', 'build'],
   },
   {
+    title: 'excel_read',
+    path: '/rsw/excel-read',
+    component: lazy(() => import('./views/excel_read')),
+    exact: true,
+    env: ['dev', 'build'],
+  },
+  {
     path: '/',
     component: lazy(() => import('./views/home')),
   },

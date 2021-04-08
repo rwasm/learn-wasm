@@ -7,10 +7,11 @@ export default defineConfig({
     reactRefresh(),
     ViteRsw({
       mode: 'release',
-      // isLib: true,
+      isLib: true,
       crates: [
         '@rsw/chasm',
         '@rsw/game-of-life',
+        '@rsw/excel-read',
       ]
     }),
   ],
