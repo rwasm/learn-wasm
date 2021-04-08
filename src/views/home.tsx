@@ -16,10 +16,10 @@ export default function HomePage() {
         ))}
       </nav>
 
-      <div className="tip">
+      {/* <div className="tip">
         <span className="item"><span>dev</span>development</span>
         <span className="item"><span>build</span>production</span>
-      </div>
+      </div> */}
 
       <footer>
         <a href="https://github.com/lencx/learn-wasm">lencx/learn-wasm</a>
