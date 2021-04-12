@@ -1,5 +1,5 @@
 use crate::JsonV;
-use calamine::{Reader, Sheets};
+use calamine::{DataType, Reader, Sheets};
 use wasm_bindgen::JsValue;
 
 /// sheets: excel对象
@@ -10,11 +10,11 @@ pub fn run(
     title_row: Vec<usize>,
     rows_excluded: Vec<usize>,
     excluded_keyword: String,
-) -> Result<JsonV, JsValue> {
+) -> Result<JsValue, JsValue> {
     let sheet_names = sheets.sheet_names().to_vec();
-    let mut r = serde_json::Map::new();
+    let r: js_sys::Map = js_sys::Map::new();
     for name in &sheet_names {
-        let mut r_arr = vec![];
+        let r_arr = js_sys::Array::new();
         let mut titles = vec![];
 
         #[allow(unused_assignments)]
@@ -28,9 +28,15 @@ pub fn run(
         // 处理标题
         {
             // 获得所有标题
+            let mut title_count = title_row.len();
             let mut row_count = 1_usize;
             for row in sheet.rows() {
+                if title_count == 0 {
+                    break;
+                }
+
                 if title_row.contains(&row_count) {
+                    title_count -= 1;
                     let mut titles2 = vec![];
                     for i in 0..row.len() {
                         let item = &row[i];
@@ -96,52 +102,57 @@ pub fn run(
         }
 
         // 处理数据
-        let rows = sheet.rows();
-        let mut row_i = 0_usize;
+        {
+            let rows = sheet.rows();
+            let mut row_i = 0_usize;
 
-        // 循环每一行数据
-        'lable: for row in rows {
-            row_i += 1;
+            // 循环每一行数据
+            'lable: for row in rows {
+                row_i += 1;
 
-            if title_row.contains(&row_i) || rows_excluded.contains(&row_i) {
-                continue;
-            }
-
-            let mut have_data = false;
-            let mut m = serde_json::Map::new();
-
-            // 循环每一列数据
-            for i in 0..tt.len() {
-                let mut v = row
-                    .get(i)
-                    .map(|v| match v {
-                        calamine::DataType::Float(v) => json!(v),
-                        calamine::DataType::Int(v) => json!(v),
-                        v => json!(v.to_string()),
-                    })
-                    .unwrap_or(JsonV::Null);
-                if let JsonV::String(v2) = v.clone() {
-                    if v2.replace(' ', "") == excluded_keyword {
-                        break 'lable;
-                    }
-                    if v2.trim() == "" {
-                        v = JsonV::Null;
-                    }
+                if title_row.contains(&row_i) || rows_excluded.contains(&row_i) {
+                    continue;
                 }
 
-                if v != JsonV::Null {
-                    have_data = true;
+                let mut have_data = false;
+                let m: js_sys::Map = js_sys::Map::new();
+
+                // 循环每一列数据
+                for i in 0..tt.len() {
+                    let v = row.get(i).unwrap_or_else(|| &DataType::Empty);
+                    let v: JsValue = match v {
+                        calamine::DataType::Float(v) => JsValue::from(*v),
+                        calamine::DataType::Int(v) => JsValue::from(*v as i32),
+                        v => {
+                            let v = v.to_string();
+                            if excluded_keyword != "" && v.replace(' ', "") == excluded_keyword {
+                                break 'lable;
+                            }
+                            if v.trim() == "" {
+                                JsValue::NULL
+                            } else {
+                                v.into()
+                            }
+                        }
+                    };
+
+                    if v != JsValue::NULL {
+                        have_data = true;
+                    }
+
+                    m.set(&JsValue::from(tt[i].as_str()), &v);
+                }
+                if !have_data {
+                    break 'lable;
                 }
 
-                m.insert(tt[i].as_str().unwrap_or_default().to_string(), v);
+                let m = js_sys::Object::from_entries(&m.into())?;
+                r_arr.push(&m);
             }
-            if !have_data {
-                break 'lable;
-            }
-
-            r_arr.push(m);
+            r.set(&JsValue::from(name.as_str()), &r_arr.into());
         }
-        r.insert(name.to_string(), json!(r_arr));
     }
-    Ok(json!(r))
+
+    let r = js_sys::Object::from_entries(&r.into())?;
+    Ok(r.into())
 }

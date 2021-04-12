@@ -87,8 +87,8 @@ pub async fn read_excel_file(
     let r = excel::run(sheets, title_row, rows_excluded, excluded_keyword)?;
 
     // 把json数据转型为Js的数据类型
-    let r =
-        JsValue::from_serde(&r).map_err(|e| JsValue::from(format!("from_serde error: {}", e)))?;
+    // let r =
+    //     JsValue::from_serde(&r).map_err(|e| JsValue::from(format!("from_serde error: {}", e)))?;
 
     // 返回数据
     Ok(r)
