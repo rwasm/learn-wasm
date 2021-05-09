@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "rsw:deploy": "node 1.js && npm run build"
+    "rsw:deploy": "rsw && npm run build"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.9.7",
