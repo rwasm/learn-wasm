@@ -6,8 +6,6 @@ export default defineConfig({
   plugins: [
     reactRefresh(),
     ViteRsw({
-      mode: 'release',
-      // isLib: true,
       crates: [
         '@rsw/chasm',
         '@rsw/game-of-life',
