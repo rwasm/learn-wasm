@@ -136,3 +136,9 @@ pre#game-of-life {
   margin: 0;
   padding: 0;
 }
+
+.test-page {
+  canvas {
+    border: solid 1px #888;
+  }
+}

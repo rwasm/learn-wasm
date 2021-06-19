@@ -31,6 +31,14 @@ const routes: RouteOption[] = [
     // env: ['dev', 'build'],
   },
   {
+    // https://github.com/rustwasm/wasm-pack/issues/1017
+    title: '#1017/wasm-pack issues teste',
+    path: '/rsw/issues/teste',
+    component: lazy(() => import('./views/teste')),
+    exact: true,
+    // env: ['dev', 'build'],
+  },
+  {
     path: '/',
     component: lazy(() => import('./views/home')),
   },

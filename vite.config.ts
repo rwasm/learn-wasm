@@ -10,6 +10,7 @@ export default defineConfig({
         '@rsw/chasm',
         '@rsw/game-of-life',
         '@rsw/excel-read',
+        '@rsw/teste'
       ]
     }),
   ],

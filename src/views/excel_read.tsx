@@ -5,7 +5,7 @@ export default function ExcelReadPage() {
   const [data, setData] = useState({});
   useEffect(() => {
     init();
-  })
+  }, [])
 
   const handleUpload = async (e: any) => {
     const file: File = e.target.files[0];
