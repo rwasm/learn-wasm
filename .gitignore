@@ -1,4 +1,5 @@
 .DS_Store
+.history
 
 node_modules
 # dist
@@ -13,3 +14,4 @@ Cargo.lock
 
 /libs
 /dist
+/.rsw

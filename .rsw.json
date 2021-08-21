@@ -1,5 +1,4 @@
 {
-  "root": ".",
   "crates": [
     "@rsw/chasm",
     "@rsw/game-of-life",
