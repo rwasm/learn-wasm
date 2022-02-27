@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "rsw:build": "rsw && npm run build"
+    "rsw": "rsw watch",
+    "build": "rsw build && yarn fe:build",
+    "fe:build": "tsc && vite build"
   },
   "dependencies": {
     "@ffmpeg/ffmpeg": "^0.9.7",
@@ -13,13 +14,14 @@
     "react-router-dom": "^5.2.0"
   },
   "devDependencies": {
+    "@rsw/cli": "^0.6.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.7",
     "@vitejs/plugin-react-refresh": "^1.3.3",
     "sass": "^1.32.8",
     "typescript": "^4.1.2",
-    "vite": "^2.5.0",
-    "vite-plugin-rsw": "^1.9.0"
+    "vite": "^2.8.4",
+    "vite-plugin-rsw": "^2.0.0"
   }
 }

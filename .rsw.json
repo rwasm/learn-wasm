@@ -1,7 +1,0 @@
-{
-  "crates": [
-    "@rsw/chasm",
-    "@rsw/game-of-life",
-    "@rsw/excel-read"
-  ]
-}

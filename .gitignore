@@ -10,7 +10,7 @@ package-lock.json
 # rust
 target/
 Cargo.lock
-# pkg/
+pkg/
 
 /libs
 /dist
