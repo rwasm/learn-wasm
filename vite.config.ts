@@ -1,10 +1,10 @@
-import reactRefresh from '@vitejs/plugin-react-refresh';
+import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite';
 import ViteRsw from 'vite-plugin-rsw';
 
 export default defineConfig({
   plugins: [
-    reactRefresh(),
+    react(),
     ViteRsw(),
   ],
 })
