@@ -2,8 +2,8 @@
 
 ```bash
 # Initialize the project
-# https://github.com/lencx/create-xc-app
-npm init xc-app learn-wasm -t wasm-react
+# https://github.com/lencx/create-mpl
+npm init mpl@latest
 ```
 
 ## [Awesome Lists](./awesome-lists.md)
