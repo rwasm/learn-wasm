@@ -3,7 +3,24 @@
 ```bash
 # Initialize the project
 # https://github.com/lencx/create-mpl
-npm init mpl@latest
+
+# npm 6.x
+npm init mpl@latest my-app --type web
+
+# npm 7+, extra double-dash is needed:
+npm init mpl@latest my-app -- --type web
+```
+
+## Pre-Install
+
+```bash
+cargo install rsw wasm-pack
+```
+
+## Start
+
+```bash
+yarn dev
 ```
 
 ## [Awesome Lists](./awesome-lists.md)

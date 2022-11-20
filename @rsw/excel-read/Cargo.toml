@@ -1,6 +1,6 @@
 [package]
 name = "excel-read"
-version = "0.1.0"
+version = "0.2.0"
 authors = [
   "lencx <cxin1314@gmail.com>", # 整理
   "郭宇 <guoyumail@qq.com>", # 作者

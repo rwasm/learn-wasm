@@ -14,6 +14,16 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14'
+
+      # Install wasm-pack
+      - uses: jetli/wasm-pack-action@v0.3.0
+        with:
+          # Optional version of wasm-pack to install(eg. 'v0.9.1', 'latest')
+          version: v0.9.1
+
+      - name: Install rsw
+        run: cargo install rsw
+
       - run: yarn
       - run: yarn build
 

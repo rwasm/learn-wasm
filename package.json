@@ -2,27 +2,24 @@
   "name": "learn-wasm",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
-    "rsw": "rsw watch",
+    "dev": "rsw watch & vite",
+    "rsw": "rsw",
     "build": "rsw build && yarn fe:build",
     "fe:build": "tsc && vite build"
   },
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.9.7",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-router-dom": "^5.2.0"
+    "@ffmpeg/ffmpeg": "^0.11.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
-    "@rsw/cli": "^0.7.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-router-dom": "^5.1.7",
-    "@vitejs/plugin-react": "^1.2.0",
-    "sass": "^1.32.8",
-    "typescript": "^4.1.2",
-    "vite": "^2.8.4",
-    "vite-plugin-rsw": "^2.0.1",
-    "wasm-pack": "^0.10.2"
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^2.0.0",
+    "sass": "^1.53.0",
+    "typescript": "^4.8.4",
+    "vite": "^3.0.4",
+    "vite-plugin-rsw": "^2.0.11"
   }
 }

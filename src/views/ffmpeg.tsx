@@ -1,22 +1,22 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
-const ffmpeg = createFFmpeg({ log: true });
+const ffmpeg = createFFmpeg({
+  log: true,
+  mainName: 'main',
+  corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js',
+});
 
 export default function FfmpegPage() {
   const [ready, setReady] = useState<boolean>(false);
   const [message, setMessage] = useState<string>('Click Start to transcode');
   const [file, setFile] = useState<File | null>(null);
   const [gif, setGif] = useState<string | null>(null);
-  const [ratio, setRatio] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
       await ffmpeg.load();
       setReady(true);
-      ffmpeg.setProgress((params) => {
-        setRatio(+(params.ratio * 100).toFixed(2));
-      })
     })();
   }, [])
 
@@ -48,11 +48,8 @@ export default function FfmpegPage() {
       {file && <button onClick={convertToGif}>convert to gif</button>}
       <br />
       {message}
-      {ratio !== 0 && ratio !== 100 && (
-        <div>{ratio}%</div>
-      )}
       <br />
-      {gif && <img width={500} src={gif} />}
+      {gif && <img width={500} src={gif} alt="" />}
     </div>
   ) : <div>loading...</div>;
 }
